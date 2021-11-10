@@ -20,6 +20,7 @@ class ViewController: UIViewController {
         didSet {
 			gridLayout.stickyRowsCount = 1
 			gridLayout.stickyColumnsCount = 1
+            gridLayout.delegate = self
         }
     }
 }
@@ -27,13 +28,13 @@ class ViewController: UIViewController {
 // MARK: - Collection view data source and delegate methods
 
 extension ViewController: UICollectionViewDataSource {
-
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 100
+        gridLayout.resetLayout()
+        return 1000
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return 30
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -42,15 +43,17 @@ extension ViewController: UICollectionViewDataSource {
         }
 
         cell.titleLabel.text = "\(indexPath)"
-		cell.backgroundColor = gridLayout.isItemSticky(at: indexPath) ? .groupTableViewBackground : .white
-
+		cell.backgroundColor = gridLayout.isItemSticky(at: indexPath) ? .groupTableViewBackground : .gray
         return cell
     }
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
+extension ViewController: UICollectionViewDelegateFlowLayout, StickyGridCollectionViewLayoutDelegate {
+    func heightForRows() -> CGFloat {
+        return 100
+    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
+        return CGSize(width: 100, height: heightForRows())
     }
 }
